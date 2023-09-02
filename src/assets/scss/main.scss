@@ -1,0 +1,59 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+}
+
+#app {
+    min-height: 100vh;
+
+    font-family: $ff-changa;
+    font-size: $fs-txt-mobile;
+    font-weight: $fw-300;
+    color: $fc-txt;
+    line-height: 1.45;
+    letter-spacing: 0.5px;
+
+    background-color: $color-bg;
+    overflow-x: hidden;
+
+    @include breakpoint {
+        font-size: $fs-txt-desktop;
+    }
+}
+
+h1 {
+    font-size: $fs-h1-mobile;
+    @include breakpoint {
+        font-size: $fs-h1-desktop;
+    }
+}
+
+h2 {
+    font-size: $fs-h2-mobile;
+    @include breakpoint {
+        font-size: $fs-h2-desktop;
+    }
+}
+
+h3 {
+    font-size: $fs-h3-mobile;
+    @include breakpoint {
+        font-size: $fs-h3-desktop;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style: none;
+}
