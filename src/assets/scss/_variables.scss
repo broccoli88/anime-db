@@ -67,7 +67,31 @@ $p-sm: 1rem;
 $p-md: 1.5rem;
 $p-lg: 2rem;
 
+// Margins
+
+$m-sm: 1rem;
+$m-md: 1.5rem;
+$m-lg: 2rem;
+
+// Gap
+
+$g-sm: 1rem;
+$g-md: 1.5rem;
+$g-lg: 2rem;
+
 // Transition
 
 $tr-03: 0.3s all ease-out;
 $tr-05: 0.5s all ease-out;
+
+// Borders
+
+$b-2-prim: 2px solid $color-primary;
+
+// Border radius
+
+$br-08: 8px;
+
+// Box-shadow
+
+$bs-15: 0 0 15px 1px hsl(0, 0%, 0%, 0.3);

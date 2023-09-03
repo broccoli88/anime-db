@@ -41,9 +41,9 @@ const hideOutline = () => (isInputFocused.value = false)
 
 .nav-search__input {
     width: 100%;
-    padding: 0.4em 0.5em;
+    padding: 0.7em 1em;
     border: none;
-
+    color: $fc-txt;
     background: none;
     outline: none;
 }
@@ -52,7 +52,7 @@ const hideOutline = () => (isInputFocused.value = false)
     border: none;
     background-color: $color-primary;
 
-    padding-inline: 0.5rem;
+    padding-inline: 1em;
 
     .nav__search-icon {
         width: 2rem;

@@ -1,8 +1,8 @@
-export const useFetch = async (page = 1, size = 10) => {
+export const useFetch = async (page = 1, size = 12) => {
 
     const api_key = import.meta.env.VITE_API_KEY
 
-    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=${size}&search=Fullmetal&genres=Fantasy%2CDrama&sortBy=ranking&sortOrder=asc`;
+    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=${size}&sortBy=ranking&sortOrder=asc`;
 
     const options = {
         method: 'GET',
@@ -16,7 +16,7 @@ export const useFetch = async (page = 1, size = 10) => {
         const response = await fetch(url, options);
         if (response.ok) {
             const result = await response.json();
-            return result
+            return result.data
         }
     } catch (error) {
         console.error(error);

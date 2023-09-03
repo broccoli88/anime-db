@@ -243,7 +243,7 @@ const toggleGenreNav = () => {
             background-color: $color-bg;
             box-shadow: 0 7.5px 7.5px 1px hsl(0, 0%, 0%, 0.3);
 
-            transition: $tr-05;
+            transition: $tr-03;
         }
 
         .genres__nav-list {
