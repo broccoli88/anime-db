@@ -6,7 +6,7 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const animeStore = useAnimeStore()
-const { isDesktopView } = storeToRefs(animeStore)
+const { isDesktopView, genresList } = storeToRefs(animeStore)
 
 const menuOpenSrc = '/images/menu-open.svg'
 const menuCloseSrc = '/images/menu-close.svg'
@@ -17,30 +17,6 @@ watch(isDesktopView, () => {
     if (isDesktopView.value) isMenuOpen.value = false
     if (!isDesktopView.value) isGenreMenuOpen.value = false
 })
-
-const genres = ref([
-    'Award Winning',
-    'Action',
-    'Suspense',
-    'Horror',
-    'Ecchi',
-    'Avant Garde',
-    'Sports',
-    'Supernatural',
-    'Fantasy',
-    'Gourmet',
-    'Boys Love',
-    'Drama',
-    'Comedy',
-    'Mystery',
-    'Girls Love',
-    'Slice of Life',
-    'Adventure',
-    'Romance',
-    'Sci-Fi',
-    'Erotica',
-    'Hentai'
-])
 
 const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
 
@@ -87,9 +63,13 @@ const toggleGenreNav = () => {
                         </div>
                         <nav class="genres__nav" :class="{ 'genres-visible': isGenreMenuOpen }">
                             <ul class="genres__nav-list">
-                                <li class="genres__item" v-for="genre in genres" :key="genre">
+                                <li
+                                    class="genres__item"
+                                    v-for="genre in genresList"
+                                    :key="genre._id"
+                                >
                                     <router-link to="#" class="genres__link">{{
-                                        genre
+                                        genre._id
                                     }}</router-link>
                                 </li>
                             </ul>

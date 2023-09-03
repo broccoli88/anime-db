@@ -11,7 +11,8 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: HomeView
+            component: HomeView,
+
         },
         {
             path: '/genre',
@@ -32,13 +33,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+    const animeStore = useAnimeStore(),
+        { selectedAnime } = storeToRefs(animeStore)
 
-    if (to.fullPath.includes('/details')) {
-        const animeStore = useAnimeStore(),
-            { selectedAnime } = storeToRefs(animeStore)
-
-        selectedAnime.value = await useFetchById(to.params.id)
-    }
+    if (to.name === 'home') animeStore.clearSearchInput()
+    if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
     next()
 
 })

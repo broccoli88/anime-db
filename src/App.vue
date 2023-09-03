@@ -10,7 +10,7 @@ import { RouterView } from 'vue-router'
 import { onMounted } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList, genresList, selectedAnime, isDesktopView } = storeToRefs(animeStore)
+    { animeList, genresList, isDesktopView } = storeToRefs(animeStore)
 
 const checkWindowWidth = () =>
     window.innerWidth >= 768 ? (isDesktopView.value = true) : (isDesktopView.value = false)
@@ -19,18 +19,14 @@ window.addEventListener('resize', checkWindowWidth)
 onMounted(checkWindowWidth)
 
 onMounted(async () => {
+    genresList.value = await useFetchGenres()
     animeList.value = await useFetch()
-    console.log(animeList.value)
-    // genresList.value = await useFetchGenres()
-    // console.log(genresList.value)
-    // selectedAnime.value = await useFetchById(1)
-    // console.log(selectedAnime.value)
 })
 </script>
 
 <template>
-    <div>
-        <TheNavbar />
+    <div class="app-container">
+        <TheNavbar v-if="genresList.length > 0" />
         <main class="main">
             <RouterView />
         </main>
@@ -39,6 +35,11 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
+.app-container {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: max-content 1fr max-content;
+}
 .main {
     @include container;
 }

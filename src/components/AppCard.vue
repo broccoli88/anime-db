@@ -41,7 +41,7 @@ const showAnimeDetails = (e) => {
 .anime-card {
     display: grid;
     gap: $g-lg;
-    // max-width: 35rem;
+    grid-template-rows: minmax(min(20rem, 100%), 35rem) 1fr;
 
     padding: $p-sm $p-sm calc($p-lg * 2);
     border: $b-2-prim;
@@ -58,7 +58,6 @@ const showAnimeDetails = (e) => {
 }
 
 .card-img {
-    max-height: 35rem;
     border-radius: $br-08;
     overflow: hidden;
 }

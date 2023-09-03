@@ -1,3 +1,5 @@
+<script setup></script>
+
 <template>
     <RouterLink :to="{ name: 'home' }" class="back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -16,11 +18,14 @@
 
 <style lang="scss" scoped>
 .back-btn {
+    border: none;
+    background: none;
     width: max-content;
     display: flex;
     align-items: center;
     gap: $g-sm;
     color: $fc-txt;
+    cursor: pointer;
 
     &:hover,
     &:focus {
