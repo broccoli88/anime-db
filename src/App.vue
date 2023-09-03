@@ -5,10 +5,16 @@ import { useFetch } from './api/useFetch'
 import { useFetchGenres } from './api/useFetchGenres'
 import { useFetchById } from './api/useFetchById'
 import { useAnimeStore } from './stores/useAnimeStore'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList, genresList, selectedAnime } = storeToRefs(animeStore)
+    { animeList, genresList, selectedAnime, isDesktopView } = storeToRefs(animeStore)
+
+const checkWindowWidth = () =>
+    window.innerWidth >= 768 ? (isDesktopView.value = true) : (isDesktopView.value = false)
+
+window.addEventListener('resize', checkWindowWidth)
+onMounted(checkWindowWidth)
 
 onMounted(async () => {
     // animeList.value = await useFetch()

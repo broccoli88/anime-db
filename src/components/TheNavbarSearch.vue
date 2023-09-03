@@ -20,13 +20,14 @@ const hideOutline = () => (isInputFocused.value = false)
             class="nav-search__input"
         />
         <button class="nav__search__btn">
-            <AppImage :src="searchIconSrc" />
+            <AppImage :src="searchIconSrc" class="nav__search-icon" />
         </button>
     </form>
 </template>
 
 <style lang="scss" scoped>
 .nav__search-form {
+    max-width: 30rem;
     display: flex;
     background-color: $color-bg-light;
     box-shadow: 0 0 10px hsl(0, 0%, 0%, 0.2);
@@ -39,7 +40,7 @@ const hideOutline = () => (isInputFocused.value = false)
 }
 
 .nav-search__input {
-    flex: 1;
+    width: 100%;
     padding: 0.4em 0.5em;
     border: none;
 
@@ -52,5 +53,9 @@ const hideOutline = () => (isInputFocused.value = false)
     background-color: $color-primary;
 
     padding-inline: 0.5rem;
+
+    .nav__search-icon {
+        width: 2rem;
+    }
 }
 </style>

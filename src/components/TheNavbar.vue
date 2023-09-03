@@ -1,11 +1,22 @@
 <script setup>
 import TheNavbarSearch from './TheNavbarSearch.vue'
 import AppImage from '../components/AppImage.vue'
-import { ref } from 'vue'
+import { useAnimeStore } from '../stores/useAnimeStore'
+import { ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+
+const animeStore = useAnimeStore()
+const { isDesktopView } = storeToRefs(animeStore)
 
 const menuOpenSrc = '/images/menu-open.svg'
 const menuCloseSrc = '/images/menu-close.svg'
 const isMenuOpen = ref(false)
+const isGenreMenuOpen = ref(false)
+
+watch(isDesktopView, () => {
+    if (isDesktopView.value) isMenuOpen.value = false
+    if (!isDesktopView.value) isGenreMenuOpen.value = false
+})
 
 const genres = ref([
     'Award Winning',
@@ -32,6 +43,10 @@ const genres = ref([
 ])
 
 const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
+
+const toggleGenreNav = () => {
+    if (isDesktopView.value) isGenreMenuOpen.value = !isGenreMenuOpen.value
+}
 </script>
 
 <template>
@@ -55,18 +70,35 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
                         </router-link>
                     </li>
                     <li>
-                        <p class="nav__genres">Genres</p>
-                        <nav class="genres__nav">
-                            <li class="genres__item" v-for="genre in genres" :key="genre">
-                                <router-link to="#" class="genres__link">{{ genre }}</router-link>
-                            </li>
+                        <div class="nav__genres" @click="toggleGenreNav">
+                            <p class="nav__genres-heading">Genres</p>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    class="genres__icon-path"
+                                    fill="white"
+                                    d="m12 17l-5-5h3V8h4v4h3l-5 5m0-15a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8a8 8 0 0 0 8 8a8 8 0 0 0 8-8a8 8 0 0 0-8-8Z"
+                                />
+                            </svg>
+                        </div>
+                        <nav class="genres__nav" :class="{ 'genres-visible': isGenreMenuOpen }">
+                            <ul class="genres__nav-list">
+                                <li class="genres__item" v-for="genre in genres" :key="genre">
+                                    <router-link to="#" class="genres__link">{{
+                                        genre
+                                    }}</router-link>
+                                </li>
+                            </ul>
                         </nav>
                     </li>
                 </ul>
 
-                <TheNavbarSearch />
+                <TheNavbarSearch class="nav__search" />
             </nav>
-            <!-- <TheNavbarSearch /> -->
         </div>
     </header>
 </template>
@@ -83,7 +115,12 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-block: 1.5rem;
+    padding-block: $p-md;
+
+    @include breakpoint {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+    }
 }
 
 .brand {
@@ -98,6 +135,10 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    @include breakpoint {
+        display: none;
+    }
 }
 
 .nav__navigation {
@@ -118,21 +159,51 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
     box-shadow: 0 15px 15px 1px hsl(0, 0%, 0%, 0.3);
 
     transform: translateX(75vw);
-    transition: 0.5s all ease-out;
+    transition: $tr-05;
+
+    @include breakpoint {
+        justify-self: end;
+        box-shadow: none;
+        padding: 0;
+        position: static;
+        top: 0;
+        transform: none;
+
+        gap: 2rem;
+        grid-template-columns: 1fr minmax(20rem, 30rem);
+    }
 
     .nav__list {
         display: grid;
         gap: 0.7rem;
         margin-bottom: 1rem;
+
+        @include breakpoint {
+            width: max-content;
+            margin-bottom: 0;
+            display: flex;
+            gap: 4rem;
+            justify-self: center;
+            align-items: center;
+        }
+    }
+
+    .nav__genres {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+
+        .genres__icon-path {
+            transition: $tr-03;
+        }
     }
 
     .nav__link,
-    .nav__genres {
+    .nav__genres-heading {
         color: $fc-txt;
         font-size: $fs-txt-desktop;
-    }
-    .nav__genres {
-        margin-bottom: 0.5rem;
+        transition: $tr-03;
     }
 
     .genres__link {
@@ -141,17 +212,58 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
 
     .nav__link:hover,
     .nav__link:focus,
-    .nav__genres:hover,
-    .nav__genres:focus,
     .genres__link:hover,
     .genres__link:focus {
         color: $color-txt-hover;
-        transition: 0.3s color ease-out;
     }
 
+    .nav__genres:hover,
+    .nav__genres:focus {
+        .nav__genres-heading {
+            color: $color-txt-hover;
+        }
+
+        .genres__icon-path {
+            fill: $color-txt-hover;
+        }
+    }
     .genres__nav {
-        display: grid;
-        gap: 0.3rem;
+        margin-top: 1rem;
+        @include breakpoint {
+            margin-top: 0;
+            display: grid;
+            grid-template-rows: 0fr;
+
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 100%;
+            z-index: 999;
+
+            background-color: $color-bg;
+            box-shadow: 0 7.5px 7.5px 1px hsl(0, 0%, 0%, 0.3);
+
+            transition: $tr-05;
+        }
+
+        .genres__nav-list {
+            display: grid;
+            gap: 0.3rem;
+            overflow: hidden;
+
+            @include breakpoint {
+                @include container;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                justify-content: space-between;
+                row-gap: 1rem;
+                font-size: $fs-txt-mobile;
+            }
+        }
+    }
+    .genres-visible {
+        grid-template-rows: 1fr;
+        padding-block: 3rem;
     }
 }
 
