@@ -1,19 +1,19 @@
 <script setup>
-import { ref, toRefs } from 'vue'
 import AppImage from './AppImage.vue'
 import { useRouter } from 'vue-router'
+import { useAnimeStore } from '../stores/useAnimeStore'
+import { storeToRefs } from 'pinia'
+import { toRefs } from 'vue'
 
 const props = defineProps({
     animeData: Object
 })
 
 const { animeData } = toRefs(props)
+const animeStore = useAnimeStore(),
+    { savedAnimeList } = storeToRefs(animeStore)
 
 const router = useRouter()
-const cardButtonsRef = ref()
-
-const addIconSrc = '/images/add.svg',
-    subtractIconSrc = '/images/subtract.svg'
 
 const showAnimeDetails = (e) => {
     const clickedEl = e.target
@@ -22,16 +22,36 @@ const showAnimeDetails = (e) => {
         router.push({ name: 'details', params: { id: animeData.value._id } })
     }
 }
+
+const saveAnime = () => {
+    animeData.value.isSaved = true
+    savedAnimeList.value.push(animeData.value)
+}
+
+const removeAnime = () => {
+    savedAnimeList.value.filter((anime) => anime._id !== animeData.value._id)
+}
 </script>
 
 <template>
     <section class="anime-card" @click="showAnimeDetails">
         <AppImage :src="animeData.image" class="card-img" />
+
         <section class="anime-card__description">
             <p>{{ animeData.title }}</p>
-            <div class="anime-card__btns" ref="cardButtonsRef">
-                <AppImage :src="addIconSrc" v-if="true" />
-                <AppImage :src="subtractIconSrc" v-else />
+            <div class="anime-card__btns">
+                <AppIcon
+                    icon="solar:add-square-broken"
+                    class="anime-card__icon"
+                    @click="saveAnime"
+                    v-if="!animeData.isSaved"
+                />
+                <AppIcon
+                    icon="solar:minus-square-broken"
+                    class="anime-card__icon"
+                    @click="removeAnime"
+                    v-else
+                />
             </div>
         </section>
     </section>
@@ -66,10 +86,21 @@ const showAnimeDetails = (e) => {
     display: grid;
     grid-template-columns: 1fr 3.2rem;
     justify-content: space-between;
+    align-items: center;
 }
 
 .anime-card__btns {
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.anime-card__icon {
+    width: 100%;
+    height: 100%;
+    transition: $tr-03;
+
+    &:hover {
+        color: $color-primary-light;
+    }
 }
 </style>

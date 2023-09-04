@@ -1,5 +1,4 @@
 <script setup>
-import AppImage from './AppImage.vue'
 import { useFetchByTitle } from '../api/useFetchByTitle'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
@@ -8,8 +7,6 @@ import { ref } from 'vue'
 const animeStore = useAnimeStore(),
     { searchedPhrase, listByTitle, isSearchedByTitle } = storeToRefs(animeStore)
 
-const searchIconSrc = '/images/search.svg',
-    clearIconSrc = '/images/menu-close.svg'
 const isInputFocused = ref(false)
 
 const showOutline = () => (isInputFocused.value = true)
@@ -28,7 +25,7 @@ const submitSearch = async () => {
         @submit.prevent="submitSearch"
     >
         <button class="nav__search__btn" type="submit">
-            <AppImage :src="searchIconSrc" class="nav__search-icon" />
+            <AppIcon icon="heroicons:magnifying-glass" class="nav__search-icon" />
         </button>
         <input
             type="text"
@@ -45,7 +42,7 @@ const submitSearch = async () => {
             @click="animeStore.clearSearchInput"
             v-if="searchedPhrase"
         >
-            <AppImage :src="clearIconSrc" />
+            <AppIcon icon="solar:close-square-broken" class="nav__search-clear-btn" />
         </button>
     </form>
 </template>
@@ -77,11 +74,14 @@ const submitSearch = async () => {
 .nav__search__btn {
     border: none;
     background-color: $color-primary;
-
+    display: flex;
+    align-items: center;
     padding-inline: 1em;
 
     .nav__search-icon {
         width: 2rem;
+        height: 2rem;
+        color: $fc-txt;
     }
 }
 
@@ -95,7 +95,14 @@ const submitSearch = async () => {
     height: 2rem;
     z-index: 9;
     cursor: pointer;
+    color: $color-white;
 
     transform: translateY(-50%);
+    transition: $tr-03;
+
+    &:hover,
+    &:focus {
+        color: $color-primary-light;
+    }
 }
 </style>

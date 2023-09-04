@@ -1,8 +1,8 @@
-export const useFetch = async (page = 1, size = 12) => {
+export const useFetch = async (page = 1) => {
 
     const api_key = import.meta.env.VITE_API_KEY
 
-    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=${size}&sortBy=ranking&sortOrder=asc`;
+    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=12&sortBy=ranking&sortOrder=asc`;
 
     const options = {
         method: 'GET',

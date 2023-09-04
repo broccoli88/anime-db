@@ -6,6 +6,7 @@ export const useAnimeStore = defineStore('animeStore', () => {
     const animeList = ref([]),
         genresList = ref([]),
         listByTitle = ref([]),
+        savedAnimeList = ref([]),
         selectedAnime = ref(null),
         searchedPhrase = ref(null),
         isDesktopView = ref(false),
@@ -24,6 +25,7 @@ export const useAnimeStore = defineStore('animeStore', () => {
     return {
         animeList,
         genresList,
+        savedAnimeList,
         selectedAnime,
         searchedPhrase,
         isDesktopView,

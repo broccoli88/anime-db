@@ -1,6 +1,7 @@
 <script setup>
 import TheNavbar from './components/TheNavbar.vue'
 import TheFooter from './components/TheFooter.vue'
+import ThePagination from './components/ThePagination.vue'
 import { storeToRefs } from 'pinia'
 import { useFetch } from './api/useFetch'
 import { useFetchGenres } from './api/useFetchGenres'
@@ -19,8 +20,8 @@ window.addEventListener('resize', checkWindowWidth)
 onMounted(checkWindowWidth)
 
 onMounted(async () => {
-    genresList.value = await useFetchGenres()
-    animeList.value = await useFetch()
+    // genresList.value = await useFetchGenres()
+    // animeList.value = await useFetch()
 })
 </script>
 
@@ -30,6 +31,7 @@ onMounted(async () => {
         <main class="main">
             <RouterView />
         </main>
+        <ThePagination />
         <TheFooter />
     </div>
 </template>

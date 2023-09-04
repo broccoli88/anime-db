@@ -1,6 +1,5 @@
 <script setup>
 import TheNavbarSearch from './TheNavbarSearch.vue'
-import AppImage from '../components/AppImage.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -8,8 +7,6 @@ import { storeToRefs } from 'pinia'
 const animeStore = useAnimeStore()
 const { isDesktopView, genresList } = storeToRefs(animeStore)
 
-const menuOpenSrc = '/images/menu-open.svg'
-const menuCloseSrc = '/images/menu-close.svg'
 const isMenuOpen = ref(false)
 const isGenreMenuOpen = ref(false)
 
@@ -31,8 +28,8 @@ const toggleGenreNav = () => {
             <router-link :to="{ name: 'home' }" class="brand"> AnimeDB </router-link>
 
             <section class="nav__menu-btn" @click="toggleNavbar">
-                <AppImage :src="menuCloseSrc" v-if="isMenuOpen" />
-                <AppImage :src="menuOpenSrc" v-else />
+                <AppIcon icon="solar:close-square-broken" v-if="isMenuOpen" />
+                <AppIcon icon="solar:menu-dots-square-broken" v-else />
             </section>
 
             <nav class="nav__navigation" :class="{ 'navbar-visible': isMenuOpen }">
@@ -48,18 +45,11 @@ const toggleGenreNav = () => {
                     <li>
                         <div class="nav__genres" @click="toggleGenreNav">
                             <p class="nav__genres-heading">Genres</p>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    class="genres__icon-path"
-                                    fill="white"
-                                    d="m12 17l-5-5h3V8h4v4h3l-5 5m0-15a10 10 0 0 1 10 10a10 10 0 0 1-10 10A10 10 0 0 1 2 12A10 10 0 0 1 12 2m0 2a8 8 0 0 0-8 8a8 8 0 0 0 8 8a8 8 0 0 0 8-8a8 8 0 0 0-8-8Z"
-                                />
-                            </svg>
+                            <AppIcon
+                                icon="solar:square-arrow-down-broken"
+                                class="genres__icon"
+                                :class="{ active: isGenreMenuOpen }"
+                            />
                         </div>
                         <nav class="genres__nav" :class="{ 'genres-visible': isGenreMenuOpen }">
                             <ul class="genres__nav-list">
@@ -119,6 +109,16 @@ const toggleGenreNav = () => {
     @include breakpoint {
         display: none;
     }
+
+    & > * {
+        width: 100%;
+        height: 100%;
+        transition: $tr-03;
+
+        &:hover {
+            color: $color-primary-light;
+        }
+    }
 }
 
 .nav__navigation {
@@ -174,7 +174,7 @@ const toggleGenreNav = () => {
         gap: 1rem;
         cursor: pointer;
 
-        .genres__icon-path {
+        .genres__icon {
             transition: $tr-03;
         }
     }
@@ -199,13 +199,14 @@ const toggleGenreNav = () => {
 
     .nav__genres:hover,
     .nav__genres:focus {
-        .nav__genres-heading {
+        .nav__genres-heading,
+        .genres__icon {
             color: $color-txt-hover;
         }
 
-        .genres__icon-path {
-            fill: $color-txt-hover;
-        }
+        // .genres__icon {
+        //     fill: $color-txt-hover;
+        // }
     }
     .genres__nav {
         margin-top: 1rem;
@@ -249,5 +250,9 @@ const toggleGenreNav = () => {
 
 .navbar-visible {
     transform: translateX(0);
+}
+
+.active {
+    transform: rotate(-180deg);
 }
 </style>
