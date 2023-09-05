@@ -37,7 +37,7 @@ const animeStore = useAnimeStore(),
 .anime-details {
     display: grid;
     gap: $g-lg;
-    margin-block: calc($m-lg * 2);
+    margin-block: $m-block;
 }
 
 .anime-details__characteristic {

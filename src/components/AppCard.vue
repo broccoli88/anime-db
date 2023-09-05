@@ -1,35 +1,26 @@
 <script setup>
 import AppImage from './AppImage.vue'
-import { useRouter } from 'vue-router'
 import { useAnimeStore } from '../stores/useAnimeStore'
-import { storeToRefs } from 'pinia'
-import { toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 
 const props = defineProps({
     animeData: Object
 })
 
+const animeStore = useAnimeStore()
 const { animeData } = toRefs(props)
-const animeStore = useAnimeStore(),
-    { savedAnimeList } = storeToRefs(animeStore)
+const animeId = animeData.value._id
 
-const router = useRouter()
+const currentSaveAnimeIcon = computed(() =>
+    animeData.value.isSaved ? 'solar:minus-square-broken' : 'solar:add-square-broken'
+)
 
 const showAnimeDetails = (e) => {
-    const clickedEl = e.target
-
-    if (!clickedEl.closest('.anime-card__btns')) {
-        router.push({ name: 'details', params: { id: animeData.value._id } })
-    }
+    animeStore.showAnimeDetails(animeId, '.anime-card__btns', e.target)
 }
 
-const saveAnime = () => {
-    animeData.value.isSaved = true
-    savedAnimeList.value.push(animeData.value)
-}
-
-const removeAnime = () => {
-    savedAnimeList.value.filter((anime) => anime._id !== animeData.value._id)
+const toggleSaveAnime = () => {
+    animeStore.toggleSaveAnime(animeData.value, animeId)
 }
 </script>
 
@@ -41,16 +32,9 @@ const removeAnime = () => {
             <p>{{ animeData.title }}</p>
             <div class="anime-card__btns">
                 <AppIcon
-                    icon="solar:add-square-broken"
+                    :icon="currentSaveAnimeIcon"
                     class="anime-card__icon"
-                    @click="saveAnime"
-                    v-if="!animeData.isSaved"
-                />
-                <AppIcon
-                    icon="solar:minus-square-broken"
-                    class="anime-card__icon"
-                    @click="removeAnime"
-                    v-else
+                    @click="toggleSaveAnime"
                 />
             </div>
         </section>

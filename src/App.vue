@@ -5,13 +5,14 @@ import ThePagination from './components/ThePagination.vue'
 import { storeToRefs } from 'pinia'
 import { useFetch } from './api/useFetch'
 import { useFetchGenres } from './api/useFetchGenres'
-import { useFetchById } from './api/useFetchById'
 import { useAnimeStore } from './stores/useAnimeStore'
-import { RouterView } from 'vue-router'
-import { onMounted } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
+import { onMounted, ref, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList, genresList, isDesktopView } = storeToRefs(animeStore)
+    { animeList, genresList, isDesktopView } = storeToRefs(animeStore),
+    route = useRoute(),
+    displayPaginationEl = ref(true)
 
 const checkWindowWidth = () =>
     window.innerWidth >= 768 ? (isDesktopView.value = true) : (isDesktopView.value = false)
@@ -20,9 +21,18 @@ window.addEventListener('resize', checkWindowWidth)
 onMounted(checkWindowWidth)
 
 onMounted(async () => {
-    // genresList.value = await useFetchGenres()
-    // animeList.value = await useFetch()
+    genresList.value = await useFetchGenres()
+    animeList.value = await useFetch()
 })
+
+watch(
+    () => route.name,
+    () => {
+        route.name === 'user-list'
+            ? (displayPaginationEl.value = false)
+            : (displayPaginationEl.value = true)
+    }
+)
 </script>
 
 <template>
@@ -31,7 +41,7 @@ onMounted(async () => {
         <main class="main">
             <RouterView />
         </main>
-        <ThePagination />
+        <ThePagination v-if="displayPaginationEl" />
         <TheFooter />
     </div>
 </template>

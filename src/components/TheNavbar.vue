@@ -1,11 +1,14 @@
 <script setup>
 import TheNavbarSearch from './TheNavbarSearch.vue'
+import { useFetchByGenre } from '../api/useFetchByGenre'
 import { useAnimeStore } from '../stores/useAnimeStore'
+import { useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
-const animeStore = useAnimeStore()
-const { isDesktopView, genresList } = storeToRefs(animeStore)
+const animeStore = useAnimeStore(),
+    { isDesktopView, genresList, currentPage } = storeToRefs(animeStore),
+    router = useRouter()
 
 const isMenuOpen = ref(false)
 const isGenreMenuOpen = ref(false)
@@ -19,6 +22,12 @@ const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
 
 const toggleGenreNav = () => {
     if (isDesktopView.value) isGenreMenuOpen.value = !isGenreMenuOpen.value
+}
+
+const displayAnimeGenreList = (genre) => {
+    currentPage.value = 1
+    router.push({ name: 'genre', params: { genre: genre, page: currentPage.value } })
+    isGenreMenuOpen.value = false
 }
 </script>
 
@@ -43,24 +52,27 @@ const toggleGenreNav = () => {
                         </router-link>
                     </li>
                     <li>
-                        <div class="nav__genres" @click="toggleGenreNav">
+                        <RouterLink
+                            :to="{ name: 'genre' }"
+                            class="nav__genres"
+                            @click="toggleGenreNav"
+                        >
                             <p class="nav__genres-heading">Genres</p>
                             <AppIcon
                                 icon="solar:square-arrow-down-broken"
                                 class="genres__icon"
                                 :class="{ active: isGenreMenuOpen }"
                             />
-                        </div>
+                        </RouterLink>
                         <nav class="genres__nav" :class="{ 'genres-visible': isGenreMenuOpen }">
                             <ul class="genres__nav-list">
                                 <li
                                     class="genres__item"
                                     v-for="genre in genresList"
                                     :key="genre._id"
+                                    @click="displayAnimeGenreList(genre._id)"
                                 >
-                                    <router-link to="#" class="genres__link">{{
-                                        genre._id
-                                    }}</router-link>
+                                    <button class="genres__link">{{ genre._id }}</button>
                                 </li>
                             </ul>
                         </nav>
@@ -181,13 +193,15 @@ const toggleGenreNav = () => {
 
     .nav__link,
     .nav__genres-heading {
-        color: $fc-txt;
         font-size: $fs-txt-desktop;
         transition: $tr-03;
     }
 
     .genres__link {
+        border: none;
+        background: none;
         color: $fc-txt;
+        cursor: pointer;
     }
 
     .nav__link:hover,

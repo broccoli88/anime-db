@@ -9,13 +9,27 @@ const animeStore = useAnimeStore(),
 </script>
 
 <template>
-    <section>
+    <section class="user-list">
         <AppToOverViewBtn />
 
-        <section>
-            <UserListAnimeCard />
+        <section class="saved-anime-list">
+            <UserListAnimeCard
+                v-for="savedAnime in savedAnimeList"
+                :key="savedAnime._id"
+                :savedAnime="savedAnime"
+            />
         </section>
     </section>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.user-list {
+    margin-block: $m-block;
+    display: grid;
+    gap: $g-lg;
+}
+.saved-anime-list {
+    display: grid;
+    gap: $g-md;
+}
+</style>

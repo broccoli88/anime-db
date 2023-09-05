@@ -5,9 +5,7 @@ import { storeToRefs } from 'pinia'
 import { ref, computed, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList } = storeToRefs(animeStore)
-
-const currentPage = ref(1)
+    { currentPage, displayedPageNumbers } = storeToRefs(animeStore)
 
 const incrementCurrentPage = () => {
     currentPage.value++
@@ -17,18 +15,9 @@ const decrementCurrentPage = () => {
     currentPage.value--
 }
 
-const displayedPageNumbers = computed(() => {
-    const selectedPage = currentPage.value
-    const rangeStart = Math.max(1, selectedPage - 2)
-    const rangeEnd = selectedPage + 2
-    return Array.from({ length: rangeEnd - rangeStart + 1 }, (_, index) => rangeStart + index)
-})
-
-const goToPage = (page) => (currentPage.value = page)
-
-watch(currentPage, async () => {
-    animeList.value = await useFetch(currentPage.value)
-})
+const goToPage = (page) => {
+    animeStore.goToPage(page)
+}
 </script>
 
 <template>

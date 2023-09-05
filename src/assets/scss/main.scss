@@ -49,9 +49,16 @@ h3 {
 
 a {
     text-decoration: none;
+    color: $fc-txt;
 }
 
 ul,
 li {
     list-style: none;
+}
+
+.router-link-exact-active {
+    color: $color-primary;
+    pointer-events: none;
+    font-weight: 600;
 }
