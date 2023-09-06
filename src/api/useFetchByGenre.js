@@ -1,8 +1,11 @@
-export const useFetchByGenre = async (genre = 'Fantasy', page = 1) => {
+import { ref } from "vue";
 
+export const useFetchByGenre = async (genre = 'Fantasy', page) => {
+
+    const result = ref()
     const api_key = import.meta.env.VITE_API_KEY
 
-    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=12&&genres=${genre}%2CDrama&sortBy=ranking&sortOrder=asc`;
+    const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=12&genres=${genre}&sortBy=ranking&sortOrder=asc`;
 
     const options = {
         method: 'GET',
@@ -15,9 +18,13 @@ export const useFetchByGenre = async (genre = 'Fantasy', page = 1) => {
     try {
         const response = await fetch(url, options);
         if (response.ok) {
-            const result = await response.json();
-            console.log(result)
-            return result.data
+            result.value = await response.json();
+
+            const { data, meta } = result.value
+
+            console.log('genre anime list: ', result.value)
+
+            return { data, meta }
         }
     } catch (error) {
         console.error(error);

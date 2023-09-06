@@ -4,9 +4,7 @@ import AppCard from '../components/AppCard.vue'
 import { storeToRefs } from 'pinia'
 import { useAnimeStore } from '../stores/useAnimeStore'
 const animeStore = useAnimeStore(),
-    { animeByGenreList } = storeToRefs(animeStore)
-
-console.log(animeByGenreList.value)
+    { animeList } = storeToRefs(animeStore)
 </script>
 
 <template>
@@ -14,7 +12,7 @@ console.log(animeByGenreList.value)
         <AppToOverViewBtn />
         <section class="anime-genre-list">
             <AppCard
-                v-for="animeByGenre in animeByGenreList"
+                v-for="animeByGenre in animeList"
                 :key="animeByGenre._id"
                 :animeData="animeByGenre"
             />

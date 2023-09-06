@@ -1,6 +1,5 @@
 <script setup>
 import TheNavbarSearch from './TheNavbarSearch.vue'
-import { useFetchByGenre } from '../api/useFetchByGenre'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
@@ -26,8 +25,8 @@ const toggleGenreNav = () => {
 
 const displayAnimeGenreList = (genre) => {
     currentPage.value = 1
-    router.push({ name: 'genre', params: { genre: genre, page: currentPage.value } })
     isGenreMenuOpen.value = false
+    router.push({ name: 'genre', params: { genre: genre, page: currentPage.value } })
 }
 </script>
 
@@ -52,7 +51,7 @@ const displayAnimeGenreList = (genre) => {
                         </router-link>
                     </li>
                     <li>
-                        <RouterLink
+                        <section
                             :to="{ name: 'genre' }"
                             class="nav__genres"
                             @click="toggleGenreNav"
@@ -63,7 +62,7 @@ const displayAnimeGenreList = (genre) => {
                                 class="genres__icon"
                                 :class="{ active: isGenreMenuOpen }"
                             />
-                        </RouterLink>
+                        </section>
                         <nav class="genres__nav" :class="{ 'genres-visible': isGenreMenuOpen }">
                             <ul class="genres__nav-list">
                                 <li

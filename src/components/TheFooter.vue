@@ -9,7 +9,7 @@
 .footer {
     display: block;
     padding-block: calc($p-lg * 3);
-    margin-top: $m-lg;
+    margin-top: auto;
 
     p {
         text-align: center;

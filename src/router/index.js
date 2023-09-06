@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { useFetchById } from '../api/useFetchById'
-import { useFetchByGenre } from '../api/useFetchByGenre'
 import HomeView from '../views/HomeView.vue'
 import { storeToRefs } from 'pinia'
 
@@ -18,7 +17,7 @@ const router = createRouter({
         {
             path: '/genre/:genre?/:page?',
             name: 'genre',
-            component: () => import('../views/GenreView.vue')
+            component: () => import('../views/GenreView.vue'),
         },
         {
             path: '/user-list',
@@ -40,11 +39,21 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const animeStore = useAnimeStore(),
-        { selectedAnime, animeByGenreList, currentPage } = storeToRefs(animeStore)
+        { selectedAnime, currentPage } = storeToRefs(animeStore)
 
-    if (to.name === 'home') animeStore.clearSearchInput()
+    currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
+    console.log(currentPage.value)
+
+    if (to.name === 'home') {
+        // animeStore.clearSearchInput()
+        await animeStore.fetchFullAnimeList()
+    }
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
-    if (to.name === 'genre') animeByGenreList.value = await useFetchByGenre(to.params.genre, currentPage.value)
+    if (to.name === 'genre') {
+        // console.log(to.params.genre)
+        // animeStore.clearSearchInput()
+        await animeStore.fetchAnimeByGenre(to.params.genre, currentPage.value)
+    }
     next()
 
 })

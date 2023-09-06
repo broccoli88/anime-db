@@ -1,5 +1,7 @@
-export const useFetchByTitle = async (query, page = 1, size = 12) => {
+import { ref } from "vue";
 
+export const useFetchByTitle = async (query, page, size = 12) => {
+    const result = ref()
     const api_key = import.meta.env.VITE_API_KEY
 
     const url = `https://anime-db.p.rapidapi.com/anime?page=${page}&size=${size}&search=${query}&sortBy=ranking&sortOrder=asc`;
@@ -15,8 +17,14 @@ export const useFetchByTitle = async (query, page = 1, size = 12) => {
     try {
         const response = await fetch(url, options);
         if (response.ok) {
-            const result = await response.json();
-            return result.data
+            result.value = await response.json();
+
+            const { data, meta } = result.value
+
+            console.log('anime by title: ', result.value)
+
+            return { data, meta }
+
         }
     } catch (error) {
         console.error(error);

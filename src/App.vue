@@ -2,17 +2,21 @@
 import TheNavbar from './components/TheNavbar.vue'
 import TheFooter from './components/TheFooter.vue'
 import ThePagination from './components/ThePagination.vue'
+import AppModalSpinner from './components/AppModalSpinner.vue'
 import { storeToRefs } from 'pinia'
-import { useFetch } from './api/useFetch'
 import { useFetchGenres } from './api/useFetchGenres'
 import { useAnimeStore } from './stores/useAnimeStore'
 import { RouterView, useRoute } from 'vue-router'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList, genresList, isDesktopView } = storeToRefs(animeStore),
+    { animeList, genresList, isDesktopView, metaData } = storeToRefs(animeStore),
     route = useRoute(),
     displayPaginationEl = ref(true)
+
+const checkIfDataFetched = computed(() =>
+    animeList.value.legth !== 0 && metaData.value !== null ? 1 : 0
+)
 
 const checkWindowWidth = () =>
     window.innerWidth >= 768 ? (isDesktopView.value = true) : (isDesktopView.value = false)
@@ -22,7 +26,6 @@ onMounted(checkWindowWidth)
 
 onMounted(async () => {
     genresList.value = await useFetchGenres()
-    animeList.value = await useFetch()
 })
 
 watch(
@@ -41,8 +44,13 @@ watch(
         <main class="main">
             <RouterView />
         </main>
-        <ThePagination v-if="displayPaginationEl" />
+        <ThePagination v-if="displayPaginationEl && checkIfDataFetched" />
         <TheFooter />
+        <Teleport to="body">
+            <Transition name="fade">
+                <AppModalSpinner v-if="animeList.length === 0" />
+            </Transition>
+        </Teleport>
     </div>
 </template>
 
@@ -54,5 +62,15 @@ watch(
 }
 .main {
     @include container;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: $tr-03;
 }
 </style>

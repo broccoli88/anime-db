@@ -1,11 +1,10 @@
 <script setup>
-import { useFetchByTitle } from '../api/useFetchByTitle'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, listByTitle, isSearchedByTitle } = storeToRefs(animeStore)
+    { searchedPhrase, isSearchedByTitle } = storeToRefs(animeStore)
 
 const isInputFocused = ref(false)
 
@@ -13,7 +12,7 @@ const showOutline = () => (isInputFocused.value = true)
 const hideOutline = () => (isInputFocused.value = false)
 
 const submitSearch = async () => {
-    listByTitle.value = await useFetchByTitle(searchedPhrase.value)
+    await animeStore.fetchAnimeByTitle()
     isSearchedByTitle.value = true
 }
 </script>

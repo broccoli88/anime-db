@@ -1,32 +1,31 @@
 import { defineStore } from 'pinia'
 import { useFetch } from '../api/useFetch'
 import { useFetchByGenre } from '../api/useFetchByGenre'
-import { useRouter, useRoute } from 'vue-router'
-import { computed, ref, watch } from 'vue'
+import { useFetchByTitle } from '../api/useFetchByTitle'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+
 
 export const useAnimeStore = defineStore('animeStore', () => {
-    const router = useRouter(),
-        route = useRoute()
+    const router = useRouter()
 
     const animeList = ref([]),
         genresList = ref([]),
         animeByGenreList = ref([]),
-        listByTitle = ref([]),
         savedAnimeList = ref([]),
+        animeListByTitle = ref([]),
+        metaData = ref(null),
         selectedAnime = ref(null),
         searchedPhrase = ref(null),
         isDesktopView = ref(false),
-        isSearchedByTitle = ref(false)
-
-    const currentList = computed(() => !isSearchedByTitle.value ? animeList.value : listByTitle.value)
-
+        isSearchedByTitle = ref(false),
+        currentPage = ref(1)
 
 
     const clearSearchInput = () => {
         searchedPhrase.value = null
         isSearchedByTitle.value = false
-        listByTitle.value = []
-        currentPage.value = 1
+        animeListByTitle.value = []
     }
 
 
@@ -49,46 +48,55 @@ export const useAnimeStore = defineStore('animeStore', () => {
         else removeSavedAnime(animeId)
     }
 
+    const fetchFullAnimeList = async () => {
+        animeList.value = []
 
-    // PAGINATION
+        const { data, meta } = await useFetch(currentPage.value)
+
+        animeList.value = data
+        metaData.value = meta
+    }
+
+    const fetchAnimeByGenre = async (genre = 'Fantasy', page) => {
+        animeList.value = []
+
+        const { data, meta } = await useFetchByGenre(genre, page)
+
+        animeList.value = data
+        metaData.value = meta
+    }
+
+    const fetchAnimeByTitle = async (page = 1, size = 12) => {
+        animeList.value = []
+
+        const { data, meta } = await useFetchByTitle(searchedPhrase.value, page, size)
+
+        animeList.value = data
+        metaData.value = meta
+    }
 
 
-    const currentPage = ref(1)
-    const currentGenre = ref(null)
 
-    const displayedPageNumbers = computed(() => {
-        const selectedPage = currentPage.value
-        const rangeStart = Math.max(1, selectedPage - 2)
-        const rangeEnd = selectedPage + 2
-        return Array.from({ length: rangeEnd - rangeStart + 1 }, (_, index) => rangeStart + index)
-    })
-
-    const goToPage = (page) => (currentPage.value = page)
-
-
-    watch(currentPage, async () => {
-        if (route.name === 'home') animeList.value = await useFetch(currentPage.value)
-        if (route.name === 'genre') animeByGenreList.value = await useFetchByGenre(currentGenre.value, currentPage.value)
-    })
 
     return {
         animeList,
+        metaData,
         genresList,
         savedAnimeList,
         animeByGenreList,
-        currentList,
         selectedAnime,
         searchedPhrase,
         isDesktopView,
-        listByTitle,
+        animeListByTitle,
         isSearchedByTitle,
-        displayedPageNumbers,
         currentPage,
-        currentGenre,
+        fetchFullAnimeList,
+        fetchAnimeByGenre,
+        fetchAnimeByTitle,
         clearSearchInput,
         showAnimeDetails,
         toggleSaveAnime,
-        goToPage
+
 
     }
 })
