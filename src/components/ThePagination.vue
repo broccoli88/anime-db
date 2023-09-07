@@ -31,6 +31,11 @@ const routeToPage = () => {
             params: { genre: route.params.genre, page: currentPage.value }
         })
     }
+    if (route.name === 'search')
+        router.push({
+            name: 'search',
+            params: { query: route.params.query, page: currentPage.value }
+        })
 }
 
 const goToPage = (page) => {

@@ -3,20 +3,15 @@ import AppHeading from '../components/AppHeading.vue'
 import AppCard from '../components/AppCard.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { animeList, searchedPhrase, isSearchedByTitle } = storeToRefs(animeStore)
-
-const currentHeading = computed(() =>
-    isSearchedByTitle.value ? searchedPhrase.value : 'Anime list'
-)
+    { animeList, checkIfAnimeListRender } = storeToRefs(animeStore)
 </script>
 
 <template>
     <div>
-        <AppHeading> {{ currentHeading }} </AppHeading>
-        <section class="anime-list" v-if="animeList.length > 0">
+        <AppHeading> Most popular </AppHeading>
+        <section class="anime-list" v-if="checkIfAnimeListRender">
             <AppCard v-for="anime in animeList" :key="anime._id" :anime-data="anime" />
         </section>
     </div>
@@ -25,7 +20,7 @@ const currentHeading = computed(() =>
 <style lang="scss" scoped>
 .anime-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 32.5rem));
+    grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
     justify-content: space-between;
     gap: $g-lg;
 }

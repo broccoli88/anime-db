@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAnimeStore } from '../stores/useAnimeStore'
-import { useFetchById } from '../api/useFetchById'
 import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useFetchById } from '../api/useFetchById'
+import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
 
 const router = createRouter({
@@ -20,6 +20,11 @@ const router = createRouter({
             component: () => import('../views/GenreView.vue'),
         },
         {
+            path: '/search/:query/:page?',
+            name: 'search',
+            component: () => import('../views/SearchView.vue')
+        },
+        {
             path: '/user-list',
             name: 'user-list',
             component: () => import('../views/UserListView.vue')
@@ -29,6 +34,7 @@ const router = createRouter({
             name: 'details',
             component: () => import('../views/DetailsView.vue'),
         },
+
         {
             path: '/:pathMatch(.*)*',
             name: 'NotFound',
@@ -42,18 +48,13 @@ router.beforeEach(async (to, from, next) => {
         { selectedAnime, currentPage } = storeToRefs(animeStore)
 
     currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
-    console.log(currentPage.value)
 
-    if (to.name === 'home') {
-        // animeStore.clearSearchInput()
-        await animeStore.fetchFullAnimeList()
-    }
+
+    if (to.name === 'home') await animeStore.fetchFullAnimeList()
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
-    if (to.name === 'genre') {
-        // console.log(to.params.genre)
-        // animeStore.clearSearchInput()
-        await animeStore.fetchAnimeByGenre(to.params.genre, currentPage.value)
-    }
+    if (to.name === 'genre') await animeStore.fetchAnimeByGenre(to.params.genre, to.params.page)
+    if (to.name === 'search') await animeStore.fetchAnimeByTitle(to.params.query, to.params.page)
+
     next()
 
 })

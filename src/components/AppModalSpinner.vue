@@ -1,4 +1,14 @@
-<script setup></script>
+<script setup>
+import { storeToRefs } from 'pinia'
+import { useAnimeStore } from '../stores/useAnimeStore'
+import { onMounted, onUnmounted } from 'vue'
+
+const animeStore = useAnimeStore(),
+    { isSpinnerVisible } = storeToRefs(animeStore)
+
+onMounted(() => (isSpinnerVisible.value = true))
+onUnmounted(() => (isSpinnerVisible.value = false))
+</script>
 
 <template>
     <div class="center">

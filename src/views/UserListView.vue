@@ -12,7 +12,7 @@ const animeStore = useAnimeStore(),
     <section class="user-list">
         <AppToOverViewBtn />
 
-        <section class="saved-anime-list">
+        <section class="saved-anime-list" v-if="savedAnimeList && savedAnimeList.length > 0">
             <UserListAnimeCard
                 v-for="savedAnime in savedAnimeList"
                 :key="savedAnime._id"

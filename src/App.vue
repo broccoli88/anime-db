@@ -15,8 +15,12 @@ const animeStore = useAnimeStore(),
     displayPaginationEl = ref(true)
 
 const checkIfDataFetched = computed(() =>
-    animeList.value.legth !== 0 && metaData.value !== null ? 1 : 0
+    animeList.value && metaData.value.totalData !== 0 ? 1 : 0
 )
+
+const checkIfModal = computed(() => {
+    return !animeList.value && route.name !== 'details' ? true : false
+})
 
 const checkWindowWidth = () =>
     window.innerWidth >= 768 ? (isDesktopView.value = true) : (isDesktopView.value = false)
@@ -26,12 +30,14 @@ onMounted(checkWindowWidth)
 
 onMounted(async () => {
     genresList.value = await useFetchGenres()
+    console.log(checkIfModal.value)
 })
 
 watch(
     () => route.name,
     () => {
-        route.name === 'user-list'
+        console.log(metaData.value)
+        route.name === 'user-list' || route.name === 'details'
             ? (displayPaginationEl.value = false)
             : (displayPaginationEl.value = true)
     }
@@ -48,7 +54,7 @@ watch(
         <TheFooter />
         <Teleport to="body">
             <Transition name="fade">
-                <AppModalSpinner v-if="animeList.length === 0" />
+                <AppModalSpinner v-if="checkIfModal" />
             </Transition>
         </Teleport>
     </div>

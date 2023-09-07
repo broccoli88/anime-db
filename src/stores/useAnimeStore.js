@@ -3,29 +3,28 @@ import { useFetch } from '../api/useFetch'
 import { useFetchByGenre } from '../api/useFetchByGenre'
 import { useFetchByTitle } from '../api/useFetchByTitle'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 
 export const useAnimeStore = defineStore('animeStore', () => {
     const router = useRouter()
 
-    const animeList = ref([]),
+    const animeList = ref(null),
         genresList = ref([]),
         animeByGenreList = ref([]),
         savedAnimeList = ref([]),
-        animeListByTitle = ref([]),
         metaData = ref(null),
         selectedAnime = ref(null),
         searchedPhrase = ref(null),
         isDesktopView = ref(false),
-        isSearchedByTitle = ref(false),
-        currentPage = ref(1)
+        currentPage = ref(1),
+        isSpinnerVisible = ref(false)
 
+
+    const checkIfAnimeListRender = computed(() => animeList.value && animeList.value.length > 0)
 
     const clearSearchInput = () => {
         searchedPhrase.value = null
-        isSearchedByTitle.value = false
-        animeListByTitle.value = []
     }
 
 
@@ -49,7 +48,7 @@ export const useAnimeStore = defineStore('animeStore', () => {
     }
 
     const fetchFullAnimeList = async () => {
-        animeList.value = []
+        animeList.value = null
 
         const { data, meta } = await useFetch(currentPage.value)
 
@@ -58,7 +57,7 @@ export const useAnimeStore = defineStore('animeStore', () => {
     }
 
     const fetchAnimeByGenre = async (genre = 'Fantasy', page) => {
-        animeList.value = []
+        animeList.value = null
 
         const { data, meta } = await useFetchByGenre(genre, page)
 
@@ -66,10 +65,10 @@ export const useAnimeStore = defineStore('animeStore', () => {
         metaData.value = meta
     }
 
-    const fetchAnimeByTitle = async (page = 1, size = 12) => {
-        animeList.value = []
+    const fetchAnimeByTitle = async (query, page) => {
+        animeList.value = null
 
-        const { data, meta } = await useFetchByTitle(searchedPhrase.value, page, size)
+        const { data, meta } = await useFetchByTitle(query, page)
 
         animeList.value = data
         metaData.value = meta
@@ -87,9 +86,9 @@ export const useAnimeStore = defineStore('animeStore', () => {
         selectedAnime,
         searchedPhrase,
         isDesktopView,
-        animeListByTitle,
-        isSearchedByTitle,
         currentPage,
+        isSpinnerVisible,
+        checkIfAnimeListRender,
         fetchFullAnimeList,
         fetchAnimeByGenre,
         fetchAnimeByTitle,

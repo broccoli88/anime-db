@@ -21,7 +21,7 @@ export const useFetch = async (page) => {
             result.value = await response.json();
 
             const { data, meta } = result.value
-            console.log('full anime list: ', result.value)
+
             return { data, meta }
         }
     } catch (error) {

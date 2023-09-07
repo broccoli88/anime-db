@@ -1,16 +1,27 @@
 <script setup>
 import AppToOverViewBtn from '../components/AppToOverViewBtn.vue'
+import AppHeading from '../components/AppHeading.vue'
 import AppCard from '../components/AppCard.vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAnimeStore } from '../stores/useAnimeStore'
 const animeStore = useAnimeStore(),
-    { animeList } = storeToRefs(animeStore)
+    { animeList, checkIfAnimeListRender } = storeToRefs(animeStore),
+    route = useRoute()
 </script>
 
 <template>
     <div class="anime-genre">
         <AppToOverViewBtn />
-        <section class="anime-genre-list">
+
+        <AppHeading>
+            Genre:
+            <span class="searched-genre">
+                {{ route.params.genre }}
+            </span>
+        </AppHeading>
+
+        <section class="anime-genre-list" v-if="checkIfAnimeListRender">
             <AppCard
                 v-for="animeByGenre in animeList"
                 :key="animeByGenre._id"
@@ -32,5 +43,9 @@ const animeStore = useAnimeStore(),
     grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
     justify-content: space-between;
     gap: $g-lg;
+}
+
+.searched-genre {
+    color: $color-primary;
 }
 </style>

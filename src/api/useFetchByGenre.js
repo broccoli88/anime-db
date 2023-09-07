@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-export const useFetchByGenre = async (genre = 'Fantasy', page) => {
+export const useFetchByGenre = async (genre = 'Fantasy', page = 1) => {
 
     const result = ref()
     const api_key = import.meta.env.VITE_API_KEY

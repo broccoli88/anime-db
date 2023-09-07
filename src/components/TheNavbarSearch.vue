@@ -1,10 +1,12 @@
 <script setup>
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, isSearchedByTitle } = storeToRefs(animeStore)
+    { searchedPhrase, currentPage } = storeToRefs(animeStore),
+    router = useRouter()
 
 const isInputFocused = ref(false)
 
@@ -12,8 +14,11 @@ const showOutline = () => (isInputFocused.value = true)
 const hideOutline = () => (isInputFocused.value = false)
 
 const submitSearch = async () => {
-    await animeStore.fetchAnimeByTitle()
-    isSearchedByTitle.value = true
+    currentPage.value = 1
+    router.push({
+        name: 'search',
+        params: { query: searchedPhrase.value, page: currentPage.value }
+    })
 }
 </script>
 

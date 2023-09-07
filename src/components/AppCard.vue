@@ -26,7 +26,7 @@ const toggleSaveAnime = () => {
 
 <template>
     <section class="anime-card" @click="showAnimeDetails">
-        <AppImage :src="animeData.image" class="card-img" />
+        <AppImage :src="animeData.image" class="card-img" v-if="animeData.image" />
 
         <section class="anime-card__description">
             <p>{{ animeData.title }}</p>

@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-export const useFetchByTitle = async (query, page, size = 12) => {
+export const useFetchByTitle = async (query, page = 1, size = 12) => {
     const result = ref()
     const api_key = import.meta.env.VITE_API_KEY
 
@@ -20,9 +20,7 @@ export const useFetchByTitle = async (query, page, size = 12) => {
             result.value = await response.json();
 
             const { data, meta } = result.value
-
-            console.log('anime by title: ', result.value)
-
+            console.log(data, meta)
             return { data, meta }
 
         }
