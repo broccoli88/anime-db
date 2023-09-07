@@ -19,6 +19,9 @@ const firestoreStore = useFirestoreStore(),
                 :savedAnime="savedAnime"
             />
         </section>
+        <section v-if="savedAnimeList.length === 0" class="no-saved-anime">
+            <h2>You have no saved anime</h2>
+        </section>
     </section>
 </template>
 
@@ -31,5 +34,10 @@ const firestoreStore = useFirestoreStore(),
 .saved-anime-list {
     display: grid;
     gap: $g-md;
+}
+.no-saved-anime {
+    align-self: center;
+    text-align: center;
+    margin-top: 20rem;
 }
 </style>

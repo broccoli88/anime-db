@@ -49,12 +49,12 @@ router.beforeEach(async (to, from, next) => {
 
     currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
 
-    if (to.name !== 'search') searchedPhrase.value = null
-    if (to.name !== 'details') selectedAnime.value = null
     if (to.name === 'home') await animeStore.fetchFullAnimeList()
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
     if (to.name === 'genre') await animeStore.fetchAnimeByGenre(to.params.genre, to.params.page)
     if (to.name === 'search') await animeStore.fetchAnimeByTitle(to.params.query, to.params.page)
+    if (to.name !== 'search') searchedPhrase.value = null
+    if (to.name !== 'details') selectedAnime.value = null
 
     next()
 

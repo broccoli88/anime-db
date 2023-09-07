@@ -9,10 +9,14 @@ const animeStore = useAnimeStore(),
 </script>
 
 <template>
-    <section class="anime-details">
+    <section class="anime-details" v-if="selectedAnime">
         <AppToOverViewBtn />
         <section class="anime-details__characteristic">
-            <AppImage :src="selectedAnime.image" class="anime-details__thumb" />
+            <AppImage
+                :src="selectedAnime.image"
+                class="anime-details__thumb"
+                v-if="selectedAnime.image"
+            />
             <div class="anime-details__specification">
                 <h1>{{ selectedAnime.title }}</h1>
                 <p>Type: {{ selectedAnime.type }}</p>

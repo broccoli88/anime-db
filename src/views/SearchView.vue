@@ -52,7 +52,6 @@ const showNoResults = computed(
 .anime-search-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 32.5rem));
-    justify-content: space-between;
     gap: $g-lg;
 }
 

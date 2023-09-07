@@ -17,6 +17,12 @@ watch(isDesktopView, () => {
     if (!isDesktopView.value) isGenreMenuOpen.value = false
 })
 
+watch(isMenuOpen, () => {
+    const bodyStyle = document.body.style
+
+    isMenuOpen.value ? (bodyStyle.overflow = 'hidden') : (bodyStyle.overflow = 'initial')
+})
+
 const toggleNavbar = () => (isMenuOpen.value = !isMenuOpen.value)
 
 const toggleGenreNav = () => {
@@ -25,6 +31,7 @@ const toggleGenreNav = () => {
 
 const displayAnimeGenreList = (genre) => {
     currentPage.value = 1
+    isMenuOpen.value = false
     isGenreMenuOpen.value = false
     router.push({ name: 'genre', params: { genre: genre, page: currentPage.value } })
 }
@@ -142,15 +149,17 @@ const displayAnimeGenreList = (genre) => {
     position: absolute;
     top: 100%;
     right: 0;
-    width: 70vw;
-    height: max-content;
+    width: 100vw;
+    height: 100vh;
     z-index: 999;
 
     background-color: $color-bg;
     box-shadow: 0 15px 15px 1px hsl(0, 0%, 0%, 0.3);
 
-    transform: translateX(75vw);
+    transform: translateX(100vw);
     transition: $tr-05;
+
+    overflow-y: hidden;
 
     @include breakpoint {
         justify-self: end;
@@ -158,6 +167,8 @@ const displayAnimeGenreList = (genre) => {
         padding: 0;
         position: static;
         top: 0;
+        width: 100%;
+        height: max-content;
         transform: none;
 
         gap: 2rem;
@@ -166,7 +177,7 @@ const displayAnimeGenreList = (genre) => {
 
     .nav__list {
         display: grid;
-        gap: 0.7rem;
+        gap: 1rem;
         margin-bottom: 1rem;
 
         @include breakpoint {
@@ -216,13 +227,10 @@ const displayAnimeGenreList = (genre) => {
         .genres__icon {
             color: $color-txt-hover;
         }
-
-        // .genres__icon {
-        //     fill: $color-txt-hover;
-        // }
     }
     .genres__nav {
-        margin-top: 1rem;
+        margin-top: 3rem;
+
         @include breakpoint {
             margin-top: 0;
             display: grid;
@@ -242,7 +250,8 @@ const displayAnimeGenreList = (genre) => {
 
         .genres__nav-list {
             display: grid;
-            gap: 0.3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             overflow: hidden;
 
             @include breakpoint {
@@ -263,6 +272,7 @@ const displayAnimeGenreList = (genre) => {
 
 .navbar-visible {
     transform: translateX(0);
+    overflow-y: auto;
 }
 
 .active {

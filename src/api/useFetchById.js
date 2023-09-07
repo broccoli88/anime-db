@@ -17,7 +17,7 @@ export const useFetchById = async (id) => {
         if (response.ok) {
             const result = await response.json();
 
-            console.log('anime by id: ', result)
+
             return result
         }
     } catch (error) {
