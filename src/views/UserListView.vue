@@ -1,11 +1,11 @@
 <script setup>
 import AppToOverViewBtn from '../components/AppToOverViewBtn.vue'
 import UserListAnimeCard from '../components/UserListAnimeCard.vue'
-import { useAnimeStore } from '../stores/useAnimeStore'
+import { useFirestoreStore } from '../stores/useFirestoreStore'
 import { storeToRefs } from 'pinia'
 
-const animeStore = useAnimeStore(),
-    { savedAnimeList } = storeToRefs(animeStore)
+const firestoreStore = useFirestoreStore(),
+    { savedAnimeList } = storeToRefs(firestoreStore)
 </script>
 
 <template>

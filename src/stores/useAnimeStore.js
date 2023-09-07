@@ -11,8 +11,6 @@ export const useAnimeStore = defineStore('animeStore', () => {
 
     const animeList = ref(null),
         genresList = ref([]),
-        animeByGenreList = ref([]),
-        savedAnimeList = ref([]),
         metaData = ref(null),
         selectedAnime = ref(null),
         searchedPhrase = ref(null),
@@ -34,17 +32,6 @@ export const useAnimeStore = defineStore('animeStore', () => {
         if (!clickedEl.closest(classToAvoid)) {
             router.push({ name: 'details', params: { id: animeId } })
         }
-    }
-
-    const removeSavedAnime = (animeId) => {
-        savedAnimeList.value = savedAnimeList.value.filter((anime) => anime._id !== animeId)
-    }
-
-    const toggleSaveAnime = (animeData, animeId) => {
-        animeData.isSaved = !animeData.isSaved
-
-        if (animeData.isSaved) savedAnimeList.value.push(animeData)
-        else removeSavedAnime(animeId)
     }
 
     const fetchFullAnimeList = async () => {
@@ -81,8 +68,6 @@ export const useAnimeStore = defineStore('animeStore', () => {
         animeList,
         metaData,
         genresList,
-        savedAnimeList,
-        animeByGenreList,
         selectedAnime,
         searchedPhrase,
         isDesktopView,
@@ -94,8 +79,5 @@ export const useAnimeStore = defineStore('animeStore', () => {
         fetchAnimeByTitle,
         clearSearchInput,
         showAnimeDetails,
-        toggleSaveAnime,
-
-
     }
 })

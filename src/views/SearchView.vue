@@ -5,10 +5,15 @@ import AppCard from '../components/AppCard.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const animeStore = useAnimeStore(),
     { animeList, isSpinnerVisible, checkIfAnimeListRender } = storeToRefs(animeStore),
     route = useRoute()
+
+const showNoResults = computed(
+    () => !isSpinnerVisible.value && animeList.value && animeList.value.length === 0
+)
 </script>
 
 <template>
@@ -25,7 +30,7 @@ const animeStore = useAnimeStore(),
                 <AppCard v-for="anime in animeList" :key="anime._id" :anime-data="anime" />
             </section>
 
-            <section v-if="!isSpinnerVisible && animeList.length === 0" class="no-search-results">
+            <section v-if="showNoResults" class="no-search-results">
                 <h2>
                     No search results for keyword:
                     <span class="searched-title">

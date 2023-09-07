@@ -10,7 +10,7 @@ const animeStore = useAnimeStore(),
 
 <template>
     <div>
-        <AppHeading> Most popular </AppHeading>
+        <AppHeading> Most popular anime series: </AppHeading>
         <section class="anime-list" v-if="checkIfAnimeListRender">
             <AppCard v-for="anime in animeList" :key="anime._id" :anime-data="anime" />
         </section>

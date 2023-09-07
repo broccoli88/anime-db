@@ -20,7 +20,7 @@ export const useFetchByTitle = async (query, page = 1, size = 12) => {
             result.value = await response.json();
 
             const { data, meta } = result.value
-            console.log(data, meta)
+
             return { data, meta }
 
         }

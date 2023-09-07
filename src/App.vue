@@ -6,20 +6,20 @@ import AppModalSpinner from './components/AppModalSpinner.vue'
 import { storeToRefs } from 'pinia'
 import { useFetchGenres } from './api/useFetchGenres'
 import { useAnimeStore } from './stores/useAnimeStore'
+import { useFirestoreStore } from './stores/useFirestoreStore'
 import { RouterView, useRoute } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
     { animeList, genresList, isDesktopView, metaData } = storeToRefs(animeStore),
+    firestoreStore = useFirestoreStore(),
     route = useRoute(),
     displayPaginationEl = ref(true)
 
-const checkIfDataFetched = computed(() =>
-    animeList.value && metaData.value.totalData !== 0 ? 1 : 0
-)
+const checkIfDataFetched = computed(() => animeList.value && metaData.value.totalData !== 0)
 
 const checkIfModal = computed(() => {
-    return !animeList.value && route.name !== 'details' ? true : false
+    return !animeList.value && route.name !== 'details'
 })
 
 const checkWindowWidth = () =>
@@ -30,13 +30,12 @@ onMounted(checkWindowWidth)
 
 onMounted(async () => {
     genresList.value = await useFetchGenres()
-    console.log(checkIfModal.value)
+    await firestoreStore.retrieveSavedAnime()
 })
 
 watch(
     () => route.name,
     () => {
-        console.log(metaData.value)
         route.name === 'user-list' || route.name === 'details'
             ? (displayPaginationEl.value = false)
             : (displayPaginationEl.value = true)

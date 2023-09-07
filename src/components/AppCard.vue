@@ -1,26 +1,36 @@
 <script setup>
 import AppImage from './AppImage.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
+import { useFirestoreStore } from '../stores/useFirestoreStore'
 import { computed, toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
     animeData: Object
 })
 
 const animeStore = useAnimeStore()
+const firestoreStore = useFirestoreStore()
+const { savedAnimeList } = storeToRefs(firestoreStore)
 const { animeData } = toRefs(props)
 const animeId = animeData.value._id
 
+const isAnimeSaved = computed(() =>
+    savedAnimeList.value.find((anime) => anime._id === animeData.value._id)
+)
+
 const currentSaveAnimeIcon = computed(() =>
-    animeData.value.isSaved ? 'solar:minus-square-broken' : 'solar:add-square-broken'
+    isAnimeSaved.value ? 'solar:minus-square-broken' : 'solar:add-square-broken'
 )
 
 const showAnimeDetails = (e) => {
     animeStore.showAnimeDetails(animeId, '.anime-card__btns', e.target)
 }
 
-const toggleSaveAnime = () => {
-    animeStore.toggleSaveAnime(animeData.value, animeId)
+const manageSaveAnime = async () => {
+    isAnimeSaved.value
+        ? await firestoreStore.deleteSavedAnime(animeId)
+        : await firestoreStore.saveAnime(animeData.value)
 }
 </script>
 
@@ -34,7 +44,7 @@ const toggleSaveAnime = () => {
                 <AppIcon
                     :icon="currentSaveAnimeIcon"
                     class="anime-card__icon"
-                    @click="toggleSaveAnime"
+                    @click="manageSaveAnime"
                 />
             </div>
         </section>

@@ -35,7 +35,7 @@ const submitSearch = async () => {
             type="text"
             placeholder="Search..."
             id="search"
-            v-model="searchedPhrase"
+            v-model.trim="searchedPhrase"
             @focusin="showOutline"
             @focusout="hideOutline"
             class="nav-search__input"

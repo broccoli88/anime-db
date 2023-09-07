@@ -45,11 +45,12 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const animeStore = useAnimeStore(),
-        { selectedAnime, currentPage } = storeToRefs(animeStore)
+        { selectedAnime, currentPage, searchedPhrase } = storeToRefs(animeStore)
 
     currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
 
-
+    if (to.name !== 'search') searchedPhrase.value = null
+    if (to.name !== 'details') selectedAnime.value = null
     if (to.name === 'home') await animeStore.fetchFullAnimeList()
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
     if (to.name === 'genre') await animeStore.fetchAnimeByGenre(to.params.genre, to.params.page)
