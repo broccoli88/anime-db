@@ -1,19 +1,18 @@
 <script setup>
+import TheNavbarSearchResults from './TheNavbarSearchResults.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, currentPage } = storeToRefs(animeStore),
+    { searchedPhrase, currentPage, isInputFocused } = storeToRefs(animeStore),
     router = useRouter()
-
-const isInputFocused = ref(false)
 
 const showOutline = () => (isInputFocused.value = true)
 const hideOutline = () => (isInputFocused.value = false)
 
 const submitSearch = async () => {
+    if (!searchedPhrase.value) return
     currentPage.value = 1
     router.push({
         name: 'search',
@@ -23,35 +22,41 @@ const submitSearch = async () => {
 </script>
 
 <template>
-    <form
-        class="nav__search-form"
-        :class="{ 'show-outline': isInputFocused }"
-        @submit.prevent="submitSearch"
-    >
-        <button class="nav__search__btn" type="submit">
-            <AppIcon icon="heroicons:magnifying-glass" class="nav__search-icon" />
-        </button>
-        <input
-            type="text"
-            placeholder="Search..."
-            id="search"
-            v-model.trim="searchedPhrase"
-            @focusin="showOutline"
-            @focusout="hideOutline"
-            class="nav-search__input"
-        />
-
-        <button
-            class="nav__search-clear-btn"
-            @click="animeStore.clearSearchInput"
-            v-if="searchedPhrase"
+    <div class="form-wrapper">
+        <form
+            class="nav__search-form"
+            :class="{ 'show-outline': isInputFocused }"
+            @submit.prevent="submitSearch"
         >
-            <AppIcon icon="solar:close-square-broken" class="nav__search-clear-btn" />
-        </button>
-    </form>
+            <button class="nav__search__btn" type="submit">
+                <AppIcon icon="heroicons:magnifying-glass" class="nav__search-icon" />
+            </button>
+            <input
+                type="text"
+                placeholder="Search..."
+                id="search"
+                v-model.trim="searchedPhrase"
+                @focusin="showOutline"
+                @focusout="hideOutline"
+                class="nav-search__input"
+            />
+            <button
+                class="nav__search-clear-btn"
+                @click="animeStore.clearSearchInput"
+                v-if="searchedPhrase"
+            >
+                <AppIcon icon="solar:close-square-broken" class="nav__search-clear-btn" />
+            </button>
+            <TheNavbarSearchResults />
+        </form>
+    </div>
 </template>
 
 <style lang="scss" scoped>
+.form-wrapper {
+    position: relative;
+}
+
 .nav__search-form {
     max-width: 30rem;
     display: flex;
@@ -59,7 +64,6 @@ const submitSearch = async () => {
     box-shadow: 0 0 10px hsl(0, 0%, 0%, 0.2);
     border-radius: 5px;
     overflow: hidden;
-    position: relative;
 }
 
 .show-outline {

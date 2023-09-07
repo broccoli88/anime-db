@@ -16,7 +16,8 @@ export const useAnimeStore = defineStore('animeStore', () => {
         searchedPhrase = ref(null),
         isDesktopView = ref(false),
         currentPage = ref(1),
-        isSpinnerVisible = ref(false)
+        isSpinnerVisible = ref(false),
+        isInputFocused = ref(false)
 
 
     const checkIfAnimeListRender = computed(() => animeList.value && animeList.value.length > 0)
@@ -74,6 +75,7 @@ export const useAnimeStore = defineStore('animeStore', () => {
         currentPage,
         isSpinnerVisible,
         checkIfAnimeListRender,
+        isInputFocused,
         fetchFullAnimeList,
         fetchAnimeByGenre,
         fetchAnimeByTitle,

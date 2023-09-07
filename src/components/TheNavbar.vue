@@ -151,15 +151,13 @@ const displayAnimeGenreList = (genre) => {
     right: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 999;
+    z-index: 99;
 
     background-color: $color-bg;
     box-shadow: 0 15px 15px 1px hsl(0, 0%, 0%, 0.3);
 
     transform: translateX(100vw);
     transition: $tr-05;
-
-    overflow-y: hidden;
 
     @include breakpoint {
         justify-self: end;
@@ -240,7 +238,7 @@ const displayAnimeGenreList = (genre) => {
             width: 100%;
             left: 0;
             top: 100%;
-            z-index: 999;
+            z-index: 99;
 
             background-color: $color-bg;
             box-shadow: 0 7.5px 7.5px 1px hsl(0, 0%, 0%, 0.3);
@@ -272,7 +270,6 @@ const displayAnimeGenreList = (genre) => {
 
 .navbar-visible {
     transform: translateX(0);
-    overflow-y: auto;
 }
 
 .active {
