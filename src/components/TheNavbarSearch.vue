@@ -3,13 +3,20 @@ import TheNavbarSearchResults from './TheNavbarSearchResults.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
 
 const animeStore = useAnimeStore(),
     { searchedPhrase, currentPage, isInputFocused, isDesktopView } = storeToRefs(animeStore),
     router = useRouter()
 
 const showOutline = () => (isInputFocused.value = true)
-const hideOutline = () => (isInputFocused.value = false)
+const hideOutline = (e) => {
+    const formWrapper = document.querySelector('.form-wrapper')
+
+    if (isInputFocused.value && !formWrapper.contains(e.target)) {
+        isInputFocused.value = false
+    }
+}
 
 const submitSearch = async () => {
     if (!searchedPhrase.value) return
@@ -19,6 +26,9 @@ const submitSearch = async () => {
         params: { query: searchedPhrase.value, page: currentPage.value }
     })
 }
+
+onMounted(() => window.addEventListener('click', hideOutline))
+onUnmounted(() => window.removeEventListener('clikc', hideOutline))
 </script>
 
 <template>
@@ -37,7 +47,6 @@ const submitSearch = async () => {
                 id="search"
                 v-model.trim="searchedPhrase"
                 @focusin="showOutline"
-                @focusout="hideOutline"
                 class="nav-search__input"
             />
             <button

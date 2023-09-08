@@ -19,7 +19,12 @@ const animeStore = useAnimeStore(),
 const checkIfDataFetched = computed(() => animeList.value && metaData.value.totalData !== 0)
 
 const checkIfModal = computed(() => {
-    return !animeList.value && route.name !== 'details' && route.name !== 'user-list'
+    return (
+        !animeList.value &&
+        route.name !== 'details' &&
+        route.name !== 'user-list' &&
+        route.name !== 'not-found'
+    )
 })
 
 const checkWindowWidth = () =>

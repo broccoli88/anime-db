@@ -9,7 +9,7 @@ const router = createRouter({
     scrollBehavior() { return { top: 0 } },
     routes: [
         {
-            path: '/:page?',
+            path: '/:page(\\d+)?',
             name: 'home',
             component: HomeView,
 
@@ -37,7 +37,7 @@ const router = createRouter({
 
         {
             path: '/:pathMatch(.*)*',
-            name: 'NotFound',
+            name: 'not-found',
             component: () => import('../views/NotFoundView.vue')
         },
     ]
@@ -50,6 +50,7 @@ router.beforeEach(async (to, from, next) => {
     currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
     isGenreMenuOpen.value = false
     isMenuOpen.value = false
+
 
     if (to.name === 'home') await animeStore.fetchFullAnimeList()
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)
