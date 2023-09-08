@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, isInputFocused, isDesktopView } = storeToRefs(animeStore),
+    { searchedPhrase, isInputFocused } = storeToRefs(animeStore),
     router = useRouter()
 
 const searchResults = ref([])
@@ -20,7 +20,7 @@ const debounce = (func, delay) => {
 }
 
 const getSearchResults = async () => {
-    if (!isDesktopView.value && !searchedPhrase.value) return
+    if (!searchedPhrase.value) return
     const { data, meta } = await useFetchByTitle(searchedPhrase.value, 1, 6)
     searchResults.value = []
     searchMeta.value = null
@@ -35,7 +35,7 @@ watch(
         if (!searchedPhrase.value) {
             searchResults.value = []
         }
-        debounce(async () => await getSearchResults(), 500)
+        debounce(async () => await getSearchResults(), 400)
     }
 )
 
@@ -78,6 +78,7 @@ const showDetails = (animeId) => {
     display: none;
 
     @include breakpoint {
+        display: block;
         position: absolute;
         top: 105%;
         left: 0;

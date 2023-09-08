@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, currentPage, isInputFocused } = storeToRefs(animeStore),
+    { searchedPhrase, currentPage, isInputFocused, isDesktopView } = storeToRefs(animeStore),
     router = useRouter()
 
 const showOutline = () => (isInputFocused.value = true)
@@ -47,7 +47,7 @@ const submitSearch = async () => {
             >
                 <AppIcon icon="solar:close-square-broken" class="nav__search-clear-btn" />
             </button>
-            <TheNavbarSearchResults />
+            <TheNavbarSearchResults v-if="isDesktopView" />
         </form>
     </div>
 </template>
