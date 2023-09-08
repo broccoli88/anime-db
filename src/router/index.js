@@ -30,7 +30,7 @@ const router = createRouter({
             component: () => import('../views/UserListView.vue')
         },
         {
-            path: '/details/:id',
+            path: '/details/:title/:id',
             name: 'details',
             component: () => import('../views/DetailsView.vue'),
         },
@@ -45,9 +45,11 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const animeStore = useAnimeStore(),
-        { selectedAnime, currentPage, searchedPhrase } = storeToRefs(animeStore)
+        { selectedAnime, currentPage, searchedPhrase, isGenreMenuOpen, isMenuOpen } = storeToRefs(animeStore)
 
     currentPage.value = to.params.page && to.params.page !== '1' ? parseInt(to.params.page) : 1;
+    isGenreMenuOpen.value = false
+    isMenuOpen.value = false
 
     if (to.name === 'home') await animeStore.fetchFullAnimeList()
     if (to.name === 'details') selectedAnime.value = await useFetchById(to.params.id)

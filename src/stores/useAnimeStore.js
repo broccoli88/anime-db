@@ -17,7 +17,9 @@ export const useAnimeStore = defineStore('animeStore', () => {
         isDesktopView = ref(false),
         currentPage = ref(1),
         isSpinnerVisible = ref(false),
-        isInputFocused = ref(false)
+        isInputFocused = ref(false),
+        isMenuOpen = ref(false),
+        isGenreMenuOpen = ref(false)
 
 
     const checkIfAnimeListRender = computed(() => animeList.value && animeList.value.length > 0)
@@ -27,11 +29,11 @@ export const useAnimeStore = defineStore('animeStore', () => {
     }
 
 
-    const showAnimeDetails = (animeId, classToAvoid, target) => {
+    const showAnimeDetails = (animeTitle, animeId, classToAvoid, target) => {
         const clickedEl = target
 
         if (!clickedEl.closest(classToAvoid)) {
-            router.push({ name: 'details', params: { id: animeId } })
+            router.push({ name: 'details', params: { title: animeTitle, id: animeId } })
         }
     }
 
@@ -76,6 +78,8 @@ export const useAnimeStore = defineStore('animeStore', () => {
         isSpinnerVisible,
         checkIfAnimeListRender,
         isInputFocused,
+        isMenuOpen,
+        isGenreMenuOpen,
         fetchFullAnimeList,
         fetchAnimeByGenre,
         fetchAnimeByTitle,

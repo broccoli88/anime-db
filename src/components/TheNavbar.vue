@@ -2,15 +2,13 @@
 import TheNavbarSearch from './TheNavbarSearch.vue'
 import { useAnimeStore } from '../stores/useAnimeStore'
 import { useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const animeStore = useAnimeStore(),
-    { isDesktopView, genresList, currentPage } = storeToRefs(animeStore),
+    { isDesktopView, genresList, currentPage, isGenreMenuOpen, isMenuOpen } =
+        storeToRefs(animeStore),
     router = useRouter()
-
-const isMenuOpen = ref(false)
-const isGenreMenuOpen = ref(false)
 
 watch(isDesktopView, () => {
     if (isDesktopView.value) isMenuOpen.value = false
@@ -29,12 +27,33 @@ const toggleGenreNav = () => {
     if (isDesktopView.value) isGenreMenuOpen.value = !isGenreMenuOpen.value
 }
 
+const manageGenreNavOnClick = (e) => {
+    const genresNav = document.querySelector('.genres__nav')
+    const genresNavBtn = document.querySelector('.nav__genres')
+    const target = e.target
+
+    if (
+        !genresNav.contains(target) &&
+        isDesktopView.value &&
+        isGenreMenuOpen.value &&
+        !genresNavBtn.contains(target)
+    ) {
+        isGenreMenuOpen.value = false
+    }
+}
+
 const displayAnimeGenreList = (genre) => {
     currentPage.value = 1
-    isMenuOpen.value = false
-    isGenreMenuOpen.value = false
     router.push({ name: 'genre', params: { genre: genre, page: currentPage.value } })
 }
+
+onMounted(() => {
+    window.addEventListener('click', manageGenreNavOnClick)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('click', manageGenreNavOnClick)
+})
 </script>
 
 <template>
@@ -76,9 +95,13 @@ const displayAnimeGenreList = (genre) => {
                                     class="genres__item"
                                     v-for="genre in genresList"
                                     :key="genre._id"
-                                    @click="displayAnimeGenreList(genre._id)"
                                 >
-                                    <button class="genres__link">{{ genre._id }}</button>
+                                    <button
+                                        class="genres__link"
+                                        @click="displayAnimeGenreList(genre._id)"
+                                    >
+                                        {{ genre._id }}
+                                    </button>
                                 </li>
                             </ul>
                         </nav>
@@ -251,9 +274,11 @@ const displayAnimeGenreList = (genre) => {
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             overflow: hidden;
+            text-align: center;
 
             @include breakpoint {
                 @include container;
+                text-align: left;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 justify-content: space-between;

@@ -9,11 +9,14 @@ const props = defineProps({
     animeData: Object
 })
 
-const animeStore = useAnimeStore()
-const firestoreStore = useFirestoreStore()
-const { savedAnimeList } = storeToRefs(firestoreStore)
-const { animeData } = toRefs(props)
-const animeId = animeData.value._id
+const animeStore = useAnimeStore(),
+    firestoreStore = useFirestoreStore(),
+    { savedAnimeList } = storeToRefs(firestoreStore),
+    { animeData } = toRefs(props),
+    animeId = animeData.value._id,
+    animeRawTitle = animeData.value.title
+
+const animeTitle = computed(() => animeRawTitle.split(' ').join('-'))
 
 const isAnimeSaved = computed(() =>
     savedAnimeList.value.find((anime) => anime._id === animeData.value._id)
@@ -24,7 +27,7 @@ const currentSaveAnimeIcon = computed(() =>
 )
 
 const showAnimeDetails = (e) => {
-    animeStore.showAnimeDetails(animeId, '.anime-card__btns', e.target)
+    animeStore.showAnimeDetails(animeTitle.value, animeId, '.anime-card__btns', e.target)
 }
 
 const manageSaveAnime = async () => {

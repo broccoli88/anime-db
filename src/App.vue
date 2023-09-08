@@ -19,7 +19,7 @@ const animeStore = useAnimeStore(),
 const checkIfDataFetched = computed(() => animeList.value && metaData.value.totalData !== 0)
 
 const checkIfModal = computed(() => {
-    return !animeList.value && route.name !== 'details'
+    return !animeList.value && route.name !== 'details' && route.name !== 'user-list'
 })
 
 const checkWindowWidth = () =>
@@ -29,6 +29,9 @@ window.addEventListener('resize', checkWindowWidth)
 onMounted(checkWindowWidth)
 
 onMounted(async () => {
+    if (route.name === 'user-list' || route.name === 'details') {
+        animeList.value = await animeStore.fetchFullAnimeList()
+    }
     genresList.value = await useFetchGenres()
     await firestoreStore.retrieveSavedAnime()
 })

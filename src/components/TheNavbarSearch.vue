@@ -55,15 +55,20 @@ const submitSearch = async () => {
 <style lang="scss" scoped>
 .form-wrapper {
     position: relative;
+    // width: max-content;
 }
 
 .nav__search-form {
-    max-width: 30rem;
+    max-width: 100%;
     display: flex;
     background-color: $color-bg-light;
     box-shadow: 0 0 10px hsl(0, 0%, 0%, 0.2);
     border-radius: 5px;
     overflow: hidden;
+
+    @include breakpoint {
+        max-width: 30rem;
+    }
 }
 
 .show-outline {

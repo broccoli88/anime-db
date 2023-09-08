@@ -7,10 +7,11 @@ import { useRouter } from 'vue-router'
 import { ref, watch } from 'vue'
 
 const animeStore = useAnimeStore(),
-    { searchedPhrase, isInputFocused } = storeToRefs(animeStore),
+    { searchedPhrase, isInputFocused, isDesktopView } = storeToRefs(animeStore),
     router = useRouter()
 
 const searchResults = ref([])
+const searchMeta = ref(null)
 let debounceTimer = null
 
 const debounce = (func, delay) => {
@@ -19,10 +20,13 @@ const debounce = (func, delay) => {
 }
 
 const getSearchResults = async () => {
-    if (!searchedPhrase.value) return
+    if (!isDesktopView.value && !searchedPhrase.value) return
     const { data, meta } = await useFetchByTitle(searchedPhrase.value, 1, 6)
     searchResults.value = []
+    searchMeta.value = null
+
     searchResults.value = data
+    searchMeta.value = meta
 }
 
 watch(
@@ -49,7 +53,7 @@ const showDetails = (animeId) => {
     <section class="search-results">
         <div
             class="serach-result__list-container"
-            :class="{ 'show-results': searchResults.length > 0 }"
+            :class="{ 'show-results': searchResults.length > 0 && isInputFocused }"
         >
             <ul class="serach-result__list">
                 <li
@@ -61,6 +65,9 @@ const showDetails = (animeId) => {
                     <AppImage :src="result.image" class="search-results__image" />
                     <p>{{ result.title }}</p>
                 </li>
+                <p class="search-results__meta" v-if="searchMeta">
+                    Total results: {{ searchMeta.totalData }}
+                </p>
             </ul>
         </div>
     </section>
@@ -68,13 +75,17 @@ const showDetails = (animeId) => {
 
 <style lang="scss" scoped>
 .search-results {
-    position: absolute;
-    top: 105%;
-    left: 0;
-    width: 100%;
-    height: max-content;
-    z-index: 98;
-    background-color: $color-bg;
+    display: none;
+
+    @include breakpoint {
+        position: absolute;
+        top: 105%;
+        left: 0;
+        width: 100%;
+        height: max-content;
+        z-index: 98;
+        background-color: $color-bg;
+    }
 }
 
 .serach-result__list-container {
@@ -88,17 +99,9 @@ const showDetails = (animeId) => {
 }
 .serach-result__list {
     display: grid;
+    overflow-y: hidden;
 
     gap: $g-sm;
-    overflow: hidden;
-
-    &:first-child {
-        padding-top: 2rem;
-    }
-
-    &:last-child {
-        padding-bottom: 2rem;
-    }
 }
 
 .search-results__item {
@@ -110,6 +113,10 @@ const showDetails = (animeId) => {
     gap: calc($g-sm / 2);
     cursor: pointer;
     position: relative;
+
+    &:first-of-type {
+        padding-top: 3rem;
+    }
 
     &::before {
         content: '';
@@ -133,5 +140,11 @@ const showDetails = (animeId) => {
 
 .search-results__image {
     width: 100%;
+}
+
+.search-results__meta {
+    text-align: center;
+    padding-bottom: 2rem;
+    font-weight: 500;
 }
 </style>

@@ -15,13 +15,14 @@ const props = defineProps({
 
 const { savedAnime } = toRefs(props)
 const animeId = savedAnime.value._id
+const animeTitle = savedAnime.value.title
 
 const toggleSaveAnime = async () => {
     await firestoreStore.deleteSavedAnime(animeId)
 }
 
 const showAnimeDetails = (e) => {
-    animeStore.showAnimeDetails(animeId, '.save-anime__icon', e.target)
+    animeStore.showAnimeDetails(animeTitle, animeId, '.save-anime__icon', e.target)
 }
 </script>
 

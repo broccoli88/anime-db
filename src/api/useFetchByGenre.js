@@ -22,7 +22,6 @@ export const useFetchByGenre = async (genre = 'Fantasy', page = 1) => {
 
             const { data, meta } = result.value
 
-            console.log('genre anime list: ', result.value)
 
             return { data, meta }
         }
