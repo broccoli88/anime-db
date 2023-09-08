@@ -44,8 +44,9 @@ watch(isInputFocused, () => {
         debounce(async () => await getSearchResults(), 100)
 })
 
-const showDetails = (animeId) => {
-    router.push({ name: 'details', params: { id: animeId } })
+const showDetails = (animeTitle, animeId) => {
+    const queryTitle = animeTitle.split(' ').join('-')
+    router.push({ name: 'details', params: { title: queryTitle, id: animeId } })
 }
 </script>
 
@@ -60,7 +61,7 @@ const showDetails = (animeId) => {
                     v-for="result in searchResults"
                     :key="result._id"
                     class="search-results__item"
-                    @click="showDetails(result._id)"
+                    @click="showDetails(result.title, result._id)"
                 >
                     <AppImage :src="result.image" class="search-results__image" />
                     <p>{{ result.title }}</p>

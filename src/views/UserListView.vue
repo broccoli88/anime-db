@@ -1,5 +1,6 @@
 <script setup>
 import AppToOverViewBtn from '../components/AppToOverViewBtn.vue'
+import AppHeading from '../components/AppHeading.vue'
 import UserListAnimeCard from '../components/UserListAnimeCard.vue'
 import { useFirestoreStore } from '../stores/useFirestoreStore'
 import { storeToRefs } from 'pinia'
@@ -11,6 +12,8 @@ const firestoreStore = useFirestoreStore(),
 <template>
     <section class="user-list">
         <AppToOverViewBtn />
+
+        <AppHeading> Your list: </AppHeading>
 
         <section class="saved-anime-list" v-if="savedAnimeList && savedAnimeList.length > 0">
             <UserListAnimeCard
