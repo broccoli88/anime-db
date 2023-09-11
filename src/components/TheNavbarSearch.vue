@@ -25,6 +25,7 @@ const submitSearch = async () => {
         name: 'search',
         params: { query: searchedPhrase.value, page: currentPage.value }
     })
+    searchedPhrase.value = null
 }
 
 onMounted(() => window.addEventListener('click', hideOutline))
